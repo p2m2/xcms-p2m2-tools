@@ -31,7 +31,7 @@ object WebApp {
     p.future
   }
 
-  private var allStaticFiles : Seq[File] = Seq()
+  //private var allStaticFiles : Seq[File] = Seq()
 
   private def getPpmUser : Double =
     Try(dom
@@ -43,7 +43,45 @@ object WebApp {
       .document
       .getElementById("rt").asInstanceOf[Input].value.toDouble).toOption.getOrElse(0.1)
 
-  private def drawTableFile(allFiles : Seq[File]) : Table = {
+  private var dataFiles : Seq[File] = Seq()
+  private def updateDataFiles(allFiles : Seq[File]) : Unit = {
+    /*
+    val elt = dom
+      .document
+      .getElementById("data_files")
+
+    if (elt != null) elt.innerHTML = ""
+
+    dom
+      .document
+      .getElementsByTagName("body")
+      .appended(
+       div(
+          id := "data_files",
+          attr("files") := allFiles
+        ).render
+      )
+    println("update =>"+allFiles.map(_.name).mkString(",")) */
+    dataFiles = allFiles
+  }
+
+  private def getDataFiles : Seq[File] = {
+    /*val elt = dom
+      .document
+      .getElementById("data_files")
+
+    println("get =>",elt)
+
+    if (elt != null)
+      elt.getAttribute("files").asInstanceOf[Seq[File]]
+    else
+      Seq()*/
+    dataFiles
+  }
+
+  private def drawTableFile() : Table = {
+
+    val allFiles : Seq[File] = getDataFiles
 
     val lFutures = Future.sequence(allFiles.zipWithIndex.map{
       case (f,indexInAllFiles) => readFileAsText(f).map(x => (indexInAllFiles,x))
@@ -54,37 +92,11 @@ object WebApp {
       thead(tr(colspan := 2, "XCMS report files")),
       tbody(
         allFiles.zipWithIndex.map {
-          case (f, indexInTable) => tr(
-       /*     td(
-              div(
-                onclick := {
-                  () => {
-                    dom.document.body.style.cursor = "progress"
-
-                    window.open("", "Error").document.body.innerHTML =
-                      html(
-                        head(
-                          script(
-                          src := "https://cdn.jsdelivr.net/npm/grist-static@latest/dist/csv-viewer.js"
-                        )),
-                        body(
-                          tag("csv-viewer")(
-                          attr("initial-content") := "h1;h2;h3\nb1;b2;b3",
-                          attr("style") := "height: 500px; border: 1px solid green"
-                      ))).render.outerHTML
-                    //println("HELLO")
-                    /*
-                    button(
-                      attr("initial-content") := "h1;h2;h3\nb1;b2;b3",
-                    ).render.click()*/
-                    dom.document.body.style.cursor = "default"
-                  }
-                },"CSV")
-            ),*/
-            td(
-            div(
+          case (f, indexInTable) =>
+            tr(td(f.name),
+              td(div("export",`class` := "btn",
               onclick := { () => {
-                if (allStaticFiles.length>1) {
+                if (allFiles.length>1) {
                   dom.document.body.style.cursor = "progress"
                   lFutures.onComplete {
                     case Success(listData: Seq[(Int, String)]) =>
@@ -110,7 +122,22 @@ object WebApp {
                     }
                   }
                 }
-              }, `class` := "xcms_file", f.name)))
+              })),
+              td(
+                div("delete",`class` := "btn",
+                  onclick := { () =>
+                  updateDataFiles(allFiles.zipWithIndex.filter(_._2 != indexInTable).map(_._1))
+
+                  val div = dom
+                      .document
+                      .getElementById("exportCsvTable")
+
+                    div.innerHTML = ""
+                    div.append(drawTableFile())
+                  }
+                )
+              )
+            )
         }
       )
     ).render
@@ -126,16 +153,16 @@ object WebApp {
       onchange := {
         (ev : dom.InputEvent) =>
           val files : Seq[File] = ev.currentTarget.asInstanceOf[HTMLInputElement].files.toSeq
-          allStaticFiles = allStaticFiles ++ files
+
+          val allFiles : Seq[File] = getDataFiles
+          updateDataFiles(allFiles ++ files)
 
           val div = dom
             .document
             .getElementById("exportCsvTable")
 
           div.innerHTML = ""
-          div.append(drawTableFile(allStaticFiles.distinct))
-
-
+          div.append(drawTableFile())
       }
     )
     dom

@@ -6,7 +6,7 @@ import fr.inrae.p2m2.parser.XCMS
 case object CompareXCMSFeaturesIon {
 
   def compareWithMed(f1 : XCMSFeaturesIon, f2 : XCMSFeaturesIon, ppm_error : Double, rt_threshold : Double): Boolean =
-    (Math.abs((f1.mzmed - f2.mzmed)/f2.mzmed)*Math.pow(10.0,6)<ppm_error) &&
+    (Math.abs((f1.mzmed - f2.mzmed)/f2.mzmed)*Math.pow(10.0,6)<=ppm_error) &&
       (Math.abs(f1.rtmed-f2.rtmed)<rt_threshold)
 
 
