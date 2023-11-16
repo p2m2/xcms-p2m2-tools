@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Identifying Common Ions of Interest Across XCMS Files</title>
+    <link rel="stylesheet" href="p2m2.css">
+    <script src="https://grist-static.com/csv-viewer.js"></script>
+  </head>
+  <header>
+    <a href="https://github.com/p2m2/" target="_blank"><img src="https://img.shields.io/badge/github-p2m2-blue.svg"/></a>
+  </header>
+  <body>
+
+  <h1><a href="javascript:window.location.reload(true)">Identifying Common Ions of Interest Across XCMS Files</a></h1>
+
+  <div id="boardTools" class="centered-element" >
+<!--
+  // PANE 1 - Reader
+-->
+
+    <h2>Input file (CSV, TSV)</h2>
+    <table>
+      <tbody>
+      <tr>
+        <td>
+        <div id="inputFilesDiv" ></div>
+      </td>
+      </tr>
+        <tr>
+          <td>
+            <button onclick="document.getElementById('exportCsvTable').innerHTML = '';">Clean</button>
+          </td>
+        </tr>
+      <tr>
+          <td>
+            <label for="ppm">ppm:</label>
+            <input type="text" id="ppm" name="ppm" required maxlength="8" size="10" value="5.0" />
+          </td>
+      </tr>
+      <tr>
+          <td>
+            <label for="rt">rt delta:</label>
+            <input type="text" id="rt" name="rt" required maxlength="8" size="10" value="0.1" />
+          </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div id="exportCsvTable"></div>
+  </div>
+
+
+  <!-- Include Scala.js compiled code -->
+  <script type="text/javascript" src="../target/scala-2.13/experiment-ions-p2m2-tools-fastopt/main.js"></script>
+
+  </body>
+    <footer>
+      <a href="https://www6.inrae.fr/p2m2" target="_blank"><img src="p2m2.png" width="120"></a>
+      <a href="https://www.metabohub.fr/" target="_blank"><img src="metabohub.png" width="120"></a>
+    </footer>
+
+</html>
+
