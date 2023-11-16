@@ -55,18 +55,32 @@ object WebApp {
       tbody(
         allFiles.zipWithIndex.map {
           case (f, indexInTable) => tr(
-            td(
+       /*     td(
               div(
                 onclick := {
                   () => {
+                    dom.document.body.style.cursor = "progress"
+
                     window.open("", "Error").document.body.innerHTML =
-                      tag("csv-viewer")(
-                        attr("initial-content") := "h1;h2;h3\nb1;b2;b3",
-                        attr("style") := "height: 500px; border: 1px solid green"
-                      ).render.innerHTML
+                      html(
+                        head(
+                          script(
+                          src := "https://cdn.jsdelivr.net/npm/grist-static@latest/dist/csv-viewer.js"
+                        )),
+                        body(
+                          tag("csv-viewer")(
+                          attr("initial-content") := "h1;h2;h3\nb1;b2;b3",
+                          attr("style") := "height: 500px; border: 1px solid green"
+                      ))).render.outerHTML
+                    //println("HELLO")
+                    /*
+                    button(
+                      attr("initial-content") := "h1;h2;h3\nb1;b2;b3",
+                    ).render.click()*/
+                    dom.document.body.style.cursor = "default"
                   }
                 },"CSV")
-            ),
+            ),*/
             td(
             div(
               onclick := { () => {
@@ -76,7 +90,7 @@ object WebApp {
                     case Success(listData: Seq[(Int, String)]) =>
                       println(s"PPM=$getPpmUser, RT:$getRtWindowsUser")
                       val reportXCMS1 = listData.find(_._1 == indexInTable).map(_._2.split("\n").toSeq).getOrElse(Seq())
-                      val listOtherReport = listData.filter(_._1 != indexInTable).map(x => (f.name, x._2.split("\n").toSeq))
+                      val listOtherReport = listData.filter(_._1 != indexInTable).map(x => (allFiles(x._1).name, x._2.split("\n").toSeq))
                       val r = CompareXCMSFeaturesIon.getColumnCompare(reportXCMS1, listOtherReport, getPpmUser, getRtWindowsUser, "\t")
                       val name_build = f.name.split("\\.") match {
                         case s if s.nonEmpty => s.toSeq
