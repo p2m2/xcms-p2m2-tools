@@ -3,9 +3,9 @@ package fr.inrae.p2m2.format
 import scala.util.Try
 
 case class XCMSFeaturesIon(
-                            featureidx : Int,
-                            mzmed : Double  ,
-                            rtmed : Double  ,
+                            featureIdx : Int,
+                            mzmed : Double,
+                            rtmed : Double,
                             name : String
                           )
 
@@ -15,7 +15,7 @@ case object XCMSFeaturesIon {
       Try(m("featureidx").toInt).toOption.getOrElse(-1),
       Try(m("mzmed").toDouble).toOption.getOrElse(-1.0),
       Try(m("rtmed").toDouble).toOption.getOrElse(-1.0),
-      m.getOrElse("name","<empty>")
+      m.getOrElse("name","<no_name>")
     )
   }
 }

@@ -29,11 +29,11 @@ object CompareXCMSFeaturesIonTest extends TestSuite {
     test("compareWithListXCMSFeaturesIon") {
       val f1 = XCMSFeaturesIon(Map("mzmed"->"179.0564","rtmed"-> "18.5"))
       val listIons = Seq(
-        XCMSFeaturesIon(Map("mzmed"->"179.0561","rtmed"-> "18.2")),
-        XCMSFeaturesIon(Map("mzmed" -> "170.0561","rtmed"-> "18.2"))
+        Some(XCMSFeaturesIon(Map("mzmed"->"179.0561","rtmed"-> "18.2"))),
+        Some(XCMSFeaturesIon(Map("mzmed" -> "170.0561","rtmed"-> "18.2")))
       )
 
-      assert(CompareXCMSFeaturesIon.compareWithListXCMSFeaturesIon(f1,listIons, 5.0, 1.0).nonEmpty)
+      assert(CompareXCMSFeaturesIon.compareWithListXCMSFeaturesIon(Some(f1),listIons, 5.0, 1.0).nonEmpty)
     }
 
     test("getColumnCompare") {
@@ -42,7 +42,7 @@ object CompareXCMSFeaturesIonTest extends TestSuite {
       val resource3 = rsc("src/test/resources/job1564536_bo_fbm_vs_falt.tsv").split("\n").toSeq
 
       val l = CompareXCMSFeaturesIon.getColumnCompare(resource1, Seq(("ressource2",resource2),("ressource3",resource3)),
-        5.0, 0.2,"\t")
+        5.0, 0.2)
       assert(l.nonEmpty)
     }
 

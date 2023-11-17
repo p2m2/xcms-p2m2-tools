@@ -84,7 +84,7 @@ object WebApp {
     val allFiles : Seq[File] = getDataFiles
 
     val lFutures = Future.sequence(allFiles.zipWithIndex.map{
-      case (f,indexInAllFiles) => readFileAsText(f).map(x => (indexInAllFiles,x))
+      case (f,indexInAllFiles) => readFileAsText(f).map(x => (indexInAllFiles,x.replace("\r", "")))
     })
 
     table(
@@ -103,7 +103,8 @@ object WebApp {
                       println(s"PPM=$getPpmUser, RT:$getRtWindowsUser")
                       val reportXCMS1 = listData.find(_._1 == indexInTable).map(_._2.split("\n").toSeq).getOrElse(Seq())
                       val listOtherReport = listData.filter(_._1 != indexInTable).map(x => (allFiles(x._1).name, x._2.split("\n").toSeq))
-                      val r = CompareXCMSFeaturesIon.getColumnCompare(reportXCMS1, listOtherReport, getPpmUser, getRtWindowsUser, "\t")
+
+                      val r = CompareXCMSFeaturesIon.getColumnCompare(reportXCMS1, listOtherReport, getPpmUser, getRtWindowsUser)
                       val name_build = f.name.split("\\.") match {
                         case s if s.nonEmpty => s.toSeq
                         case _ => Seq("csv")
