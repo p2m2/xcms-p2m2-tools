@@ -1,6 +1,6 @@
 # xcms-p2m2-tools
-[![CircleCI](https://circleci.com/gh/p2m2/experiment-ions-p2m2-tools.svg?style=shield)](https://circleci.com/gh/p2m2/experiment-ions-p2m2-tools)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/516456a87a7447ce9c02290c4fe13bea)](https://app.codacy.com/gh/p2m2/experiment-ions-p2m2-tools/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![CircleCI](https://circleci.com/gh/p2m2/xcms-p2m2-tools.svg?style=shield)](https://circleci.com/gh/p2m2/xcms-p2m2-tools)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/516456a87a7447ce9c02290c4fe13bea)](https://app.codacy.com/gh/p2m2/xcms-p2m2-tools/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 https://p2m2.github.io/xcms-p2m2-tools/
 
