@@ -1,36 +1,46 @@
 package fr.inrae.p2m2.parser
 
 import fr.inrae.p2m2.format.XCMSFeaturesIon
+import kantan.csv.CsvConfiguration.{Header, QuotePolicy}
+import kantan.csv._
+import kantan.csv.ops._
+import kantan.csv.generic._
+
+import scala.util.{Success, Try}
 
 case object XCMS {
-
-  def getSepFromHeader(header : Option[String]) : Option[String] = header match {
+  def getSepAndHeader(header: Option[String]): Option[(String,Seq[String])] = header match {
     case Some(line) if line.nonEmpty =>
-      Some(Seq(("\t", line.split("\t")), (";", line.split(";"))).maxBy(_._2.length)._1)
+      val sep : String = Seq(("\t", line.split("\t")), (";", line.split(";"))).maxBy(_._2.length)._1
+      Some(sep,header.get.split(sep))
     case _ => None
   }
+
+
   /**
    *
-   * @param lines : XCMS lines to parse
+   * @param contentFile : XCMS lines to parse
    * @return
    */
-  def parse(lines: Seq[String],sep : String): Seq[Option[XCMSFeaturesIon]] = {
-    // buffer key to store properties of the current features during parsing
-    val header : Seq[String]= lines.head.split(sep)
-    //println(header)
-    lines.drop(1).zipWithIndex.map {
-      case (line,i) =>
-        val values : Seq[String]= line.split(sep)
-        if (values.length > header.length) {
-          System.err.println(s"bad line def at [$i] size:${values.length} != ${header.length} ")
-          System.err.println(s"${values.mkString(",")}")
+  def parse(contentFile: String): Seq[Option[XCMSFeaturesIon]] = {
+
+    getSepAndHeader(contentFile.split("\n").headOption) match {
+      case Some((sep : String, header : Seq[String])) => contentFile.readCsv[List, List[String]](rfc.withHeader.withCellSeparator(sep.charAt(0))).collect {
+        case Right(fields) =>
+          Some(XCMSFeaturesIon(
+              fields.zipWithIndex.flatMap {
+                case (f, i) if i<header.length => Some(header(i) -> f.trim)
+                case (f, i) =>
+                 // System.err.println(s"fields :${fields.mkString(",")} - (field,column) :($f,$i).")
+                  None
+              }.toMap))
+
+        case Left(error) =>
+          System.err.println(error.getMessage)
           None
-        } else {
-          val m : Map[String,String]= header.zipWithIndex.map {
-            case (field, idx) => field -> values.lift(idx).getOrElse("")
-          }.toMap
-          Some(XCMSFeaturesIon(m))
-        }
+      }
+      case _ => Seq()
     }
   }
+
 }

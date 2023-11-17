@@ -22,25 +22,30 @@ case object CompareXCMSFeaturesIon {
   }
 
 
-  def getColumnCompare( reportXCMS1 : Seq[String], listReportXCMSCompare : Seq[(String,Seq[String])],
+  def getColumnCompare( reportXCMS1 : String, listReportXCMSCompare : Seq[(String,String)],
                         ppm_error : Double, rt_threshold : Double): Seq[String] = {
 
-    val sep1 = XCMS.getSepFromHeader(reportXCMS1.headOption).getOrElse("\t")
-    val lIons1 = XCMS.parse(reportXCMS1,sep1)
+    val lIons1 = XCMS.parse(reportXCMS1)
+    val reportOrigin = reportXCMS1.split("\n")
+    val sep1 = XCMS.getSepAndHeader(reportOrigin.headOption).getOrElse(("\t",Seq()))._1
+
     val listOfList : Seq[Seq[String]]= listReportXCMSCompare.map {
       case (_, reportXCMS2) =>
-        val lIons2 = XCMS.parse(reportXCMS2,XCMS.getSepFromHeader(reportXCMS2.headOption).getOrElse("\t"))
+        val lIons2 = XCMS.parse(reportXCMS2)
         lIons1.map(
           ion => compareWithListXCMSFeaturesIon(ion, lIons2, ppm_error, rt_threshold)
             .map(x => s"${x.name}(${x.featureIdx})").getOrElse("")
         )
     }
 
-    val header : String = reportXCMS1.head+sep1+listReportXCMSCompare.map(_._1).mkString(sep1)
+    val header : String = reportOrigin.head+sep1+listReportXCMSCompare.map(_._1).mkString(sep1)
 
     Seq(header)++
-      reportXCMS1.drop(1).zipWithIndex.map {
-        case (line, i) => line + sep1 + listOfList.map(_(i)).mkString(sep1)
+      reportOrigin.drop(1).zipWithIndex.map {
+        case (line, i) => line + sep1 + listOfList.map{
+          case x if i<x.length => x(i)
+          case _ => ""
+        }.mkString(sep1)
       }
   }
 }

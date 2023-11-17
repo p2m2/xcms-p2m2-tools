@@ -8,24 +8,22 @@ object XCMSTest extends TestSuite {
   def tests: Tests = Tests {
 
     test("getSepFromHeader") {
-      val resource = rsc("src/test/resources/job1564298_bo_fes_vs_fbm.tsv")
+      val resource = rsc("src/test/resources/test.tsv")
       val header: Option[String] = resource.split("\n").headOption
       assert(header.nonEmpty)
-      assert(XCMS.getSepFromHeader(header).contains("\t"))
+      assert(XCMS.getSepAndHeader(header).getOrElse(("\t",Seq()))._1 == "\t")
     }
 
-    test("ex1Parse") {
-      val resource = rsc("src/test/resources/job1564298_bo_fes_vs_fbm.tsv")
-      val lines: Seq[String] = resource.split("\n")
-      val l : Seq[Option[XCMSFeaturesIon]] = XCMS.parse(lines,"\t")
+    test("ex1Parse tsv") {
+      val resource = rsc("src/test/resources/test.tsv")
+      val l : Seq[Option[XCMSFeaturesIon]] = XCMS.parse(resource)
       assert(l.nonEmpty)
       assert(!l.contains(None))
     }
 
-    test("ex2Parse") {
-      val resource = rsc("src/test/resources/job1564299_bo_fes_vs_falt.tsv")
-      val lines: Seq[String] = resource.split("\n")
-      val l : Seq[Option[XCMSFeaturesIon]] = XCMS.parse(lines,"\t")
+    test("ex1Parse csv") {
+      val resource = rsc("src/test/resources/test.csv")
+      val l: Seq[Option[XCMSFeaturesIon]] = XCMS.parse(resource)
       assert(l.nonEmpty)
       assert(!l.contains(None))
     }

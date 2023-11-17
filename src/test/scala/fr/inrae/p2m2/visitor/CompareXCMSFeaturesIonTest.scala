@@ -37,11 +37,10 @@ object CompareXCMSFeaturesIonTest extends TestSuite {
     }
 
     test("getColumnCompare") {
-      val resource1 = rsc("src/test/resources/job1564298_bo_fes_vs_fbm.tsv").split("\n").toSeq
-      val resource2 = rsc("src/test/resources/job1564299_bo_fes_vs_falt.tsv").split("\n").toSeq
-      val resource3 = rsc("src/test/resources/job1564536_bo_fbm_vs_falt.tsv").split("\n").toSeq
+      val resource1 = rsc("src/test/resources/test.tsv")
+      val resource2 = rsc("src/test/resources/test.csv")
 
-      val l = CompareXCMSFeaturesIon.getColumnCompare(resource1, Seq(("ressource2",resource2),("ressource3",resource3)),
+      val l = CompareXCMSFeaturesIon.getColumnCompare(resource1, Seq(("ressource2",resource2)),
         5.0, 0.2)
       assert(l.nonEmpty)
     }

@@ -101,8 +101,8 @@ object WebApp {
                   lFutures.onComplete {
                     case Success(listData: Seq[(Int, String)]) =>
                       println(s"PPM=$getPpmUser, RT:$getRtWindowsUser")
-                      val reportXCMS1 = listData.find(_._1 == indexInTable).map(_._2.split("\n").toSeq).getOrElse(Seq())
-                      val listOtherReport = listData.filter(_._1 != indexInTable).map(x => (allFiles(x._1).name, x._2.split("\n").toSeq))
+                      val reportXCMS1 = listData.find(_._1 == indexInTable).map(_._2).getOrElse("")
+                      val listOtherReport = listData.filter(_._1 != indexInTable).map(x => (allFiles(x._1).name, x._2))
 
                       val r = CompareXCMSFeaturesIon.getColumnCompare(reportXCMS1, listOtherReport, getPpmUser, getRtWindowsUser)
                       val name_build = f.name.split("\\.") match {

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Identifying Common Ions of Interest Across XCMS Files</title>
     <link rel="stylesheet" href="p2m2.css">
-    <script src="https://grist-static.com/csv-viewer.js"></script>
   </head>
   <header>
     <a href="https://github.com/p2m2/" target="_blank"><img src="https://img.shields.io/badge/github-p2m2-blue.svg"/></a>
@@ -26,11 +25,6 @@
         <div id="inputFilesDiv" ></div>
       </td>
       </tr>
-        <tr>
-          <td>
-            <button onclick="document.getElementById('exportCsvTable').innerHTML = '';">Clean</button>
-          </td>
-        </tr>
       <tr>
           <td>
             <label for="ppm">ppm:</label>
@@ -45,7 +39,7 @@
       </tr>
       </tbody>
     </table>
-
+    <p> Fields <i>featureidx, name, rtmed, mzmed</i> should be filled.</p>
     <div id="exportCsvTable"></div>
   </div>
 
